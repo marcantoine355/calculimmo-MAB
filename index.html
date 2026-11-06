@@ -304,7 +304,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
           <div class="f"><label for="prix">Prix d'achat</label><div class="inp"><input id="prix" data-k="prix" inputmode="decimal"><span class="u">€</span></div></div>
           <div class="f"><label for="surface">Surface</label><div class="inp"><input id="surface" data-k="surface" inputmode="decimal"><span class="u">m²</span></div></div>
           <div class="f"><label for="agence">Frais d'agence</label><div class="inp"><input id="agence" data-k="agence" inputmode="decimal"><span class="u">€</span></div></div>
-          <div class="f"><label>Frais de notaire</label><div class="calc"><span data-o="notaire">–</span><small>8 % du prix hors agence</small></div></div>
+          <div class="f"><label for="notairePct">Frais de notaire</label><div class="inp"><input id="notairePct" data-k="notairePct" inputmode="decimal"><span class="u">% du prix</span></div><span class="hint">8 % par défaut dans l'ancien (2 à 3 % dans le neuf), soit <b data-o="notaire"></b></span></div>
           <div class="f"><label for="fraisDossier">Frais de dossier bancaire</label><div class="inp"><input id="fraisDossier" data-k="fraisDossier" inputmode="decimal"><span class="u">€</span></div><span class="hint">Lié à l'onglet Financement</span></div>
           <div class="f"><label for="travaux">Montant des travaux</label><div class="inp"><input id="travaux" data-k="travaux" inputmode="decimal"><span class="u">€</span></div></div>
           <div class="f"><label for="mob">Achat de meubles si location meublée</label><div class="inp"><input id="mob" data-k="mob" inputmode="decimal"><span class="u">€</span></div><span class="hint">Laissez 0 en location nue. Compté dans le coût d'acquisition.</span></div>
@@ -337,12 +337,13 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     <div class="col res-col">
       <section class="card">
         <h2>Coût d'acquisition</h2>
-        <div class="big"><span class="l">Total acquisition</span><span class="v" data-o="totalAcq">–</span><span class="s">prix + notaire + agence + frais de dossier + travaux + meubles</span></div>
+        <div class="big"><span class="l">Total acquisition</span><span class="v" data-o="totalAcq">–</span><span class="s">prix + notaire + agence + frais de dossier + frais de garantie + travaux + meubles</span></div>
         <div class="rows">
           <div class="row"><span>Prix du bien</span><b data-o="r_prix">–</b></div>
-          <div class="row"><span>Frais de notaire (8 %)</span><b data-o="r_notaire">–</b></div>
+          <div class="row"><span>Frais de notaire (<span data-o="notPctTxt"></span>)</span><b data-o="r_notaire">–</b></div>
           <div class="row"><span>Frais d'agence</span><b data-o="r_agence">–</b></div>
           <div class="row"><span>Frais de dossier</span><b data-o="r_dossier">–</b></div>
+          <div class="row"><span>Frais de garantie (<span data-o="garPctTxt"></span> du prêt)</span><b data-o="r_garantie">–</b></div>
           <div class="row"><span>Travaux</span><b data-o="r_travaux">–</b></div>
           <div class="row"><span>Meubles</span><b data-o="r_mob">–</b></div>
         </div>
@@ -442,7 +443,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
     <div class="metrics">
       <div class="metric"><div class="l">Prix au m² avant travaux</div><div class="v" data-o="m2avant">–</div><p class="formula">prix d'achat ÷ surface</p></div>
       <div class="metric"><div class="l">Prix au m² après travaux</div><div class="v" data-o="m2apres">–</div><p class="formula">(prix d'achat + travaux) ÷ surface</p></div>
-      <div class="metric"><div class="l">Rentabilité brute</div><div class="v" data-o="brute">–</div><p class="formula"><code>(loyer × 12) ÷ total acquisition</code><br>Total acquisition = prix du bien + notaire + agence + frais de dossier + travaux + meubles</p></div>
+      <div class="metric"><div class="l">Rentabilité brute</div><div class="v" data-o="brute">–</div><p class="formula"><code>(loyer × 12) ÷ total acquisition</code><br>Total acquisition = prix du bien + notaire + agence + frais de dossier + frais de garantie + travaux + meubles</p></div>
       <div class="metric"><div class="l">Rentabilité nette</div><div class="v" data-o="nette">–</div><p class="formula"><code>[(loyer annuel − charges annuelles) ÷ coût total du projet] × 100</code><br>Loyer annuel après vacance locative de <span data-o="vacPct2"></span></p></div>
       <div class="metric"><div class="l">Cash flow annuel</div><div class="v" data-o="cfAn">–</div><div class="cfnote" data-o="cfPhrase"></div><p class="formula"><code>loyers annuels − (charges annuelles + mensualité × 12)</code></p></div>
       <div class="metric"><div class="l">Cash flow mensuel</div><div class="v" data-o="cfM">–</div><p class="formula"><code>cash flow annuel ÷ 12</code></p></div>
@@ -503,7 +504,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
         </div>
         <p class="formula" data-o="rc_mS" style="margin-top:6px"></p>
       </div>
-      <p class="formula" style="margin-top:10px">Prix : les frais de notaire suivent le prix ; les frais d'agence et les travaux restent ceux saisis. Loyer : montant mensuel charges comprises, avec la vacance locative choisie. Le rendement après impôt et sur fonds propres est calculé sur la 1re année de location.</p>
+      <p class="formula" style="margin-top:10px">Prix : les frais de notaire (au taux saisi) et la garantie suivent le prix ; les frais d'agence et les travaux restent ceux saisis. Loyer : montant mensuel charges comprises, avec la vacance locative choisie. Le rendement après impôt et sur fonds propres est calculé sur la 1re année de location.</p>
     </section>
     <button type="button" class="go" data-goto="fiscal">Maintenant, voyons l'impact fiscal →</button>
   </div>
@@ -896,7 +897,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
 const DEF = {
   prix:180000, surface:55, agence:7000, fraisDossier:1000, travaux:15000,
   loyer:950, vac:0, pret:true, tf:1100, comptable:400, cfe:250, copro:500, divers:200, assHab:180, mob:0,
-  apport:20000, montantAuto:true, montant:200000, duree:20, taux:3.70, assur:0.35, garantie:1,
+  notairePct:8, apport:20000, montantAuto:true, montant:200000, duree:20, taux:3.70, assur:0.35, garantie:1,
   e_montant:150000, e_duree:20, e_taux:3.70, e_assur:0.35, e_dossier:1000, e_garantie:1,
   p_mens:1000, p_duree:25, p_apport:20000, p_taux:3.84, p_assur:0.35, p_dossier:1000, p_garantie:1,
   d_a:2600, d_b:0, d_has:false, d_rp:0, d_list:[{lib:"Projet A", m:0, loy:0}], d_pct:70, d_new:800,
@@ -1171,14 +1172,17 @@ function revente(X, R, s){
 
 function compute(){
   const s = S, R = {};
-  R.notaire = s.prix*0.08;
-  R.totalAcq = s.prix + R.notaire + s.agence + s.fraisDossier + s.travaux + s.mob;
+  R.notaire = s.prix*(isFinite(s.notairePct) ? s.notairePct : 8)/100;
+  // Frais de garantie (% du prêt) inclus dans le coût d'acquisition. En calcul auto, le prêt les finance aussi :
+  // montant = base + g×montant − apport  ⇒  montant = (base − apport) ÷ (1 − g)
+  const base = s.prix + R.notaire + s.agence + s.fraisDossier + s.travaux + s.mob, g = Math.min(0.5, Math.max(0, s.garantie/100));
+  R.montant = !s.pret ? 0 : (s.montantAuto ? Math.max(0, (base - s.apport)/(1 - g)) : s.montant);
+  R.garantie = R.montant*g;
+  R.totalAcq = base + R.garantie;
   R.chargesAn = s.tf + s.comptable + s.cfe + s.copro + s.divers + s.assHab;
   R.loyerAn = s.loyer*12;
   R.loyerEff = R.loyerAn*(1 - s.vac/100);
-  R.montant = !s.pret ? 0 : (s.montantAuto ? Math.max(0, R.totalAcq - s.apport) : s.montant);
   R.L = loan(R.montant, s.taux, s.duree, s.assur);
-  R.garantie = R.montant*s.garantie/100;
   R.coutTotal = R.montant + R.L.interets + R.L.assurance;
   R.coutCredit = R.L.interets + R.L.assurance + s.fraisDossier + R.garantie;
   R.m2avant = s.surface>0 ? s.prix/s.surface : NaN;
@@ -1221,11 +1225,11 @@ const tone = x => !isFinite(x) ? "" : (x>=0 ? "pos" : "neg");
 function render(){
   const R = compute(), s = S;
   out("notaire", eur(R.notaire)); out("totalAcq", eur(R.totalAcq));
-  out("r_prix", eur(s.prix)); out("r_notaire", eur(R.notaire)); out("r_agence", eur(s.agence)); out("r_dossier", eur(s.fraisDossier)); out("r_travaux", eur(s.travaux)); out("r_mob", eur(s.mob));
+  out("r_prix", eur(s.prix)); out("r_notaire", eur(R.notaire)); out("r_agence", eur(s.agence)); out("r_dossier", eur(s.fraisDossier)); out("r_travaux", eur(s.travaux)); out("r_garantie", eur(R.garantie)); out("garPctTxt", fnum.format(s.garantie) + " %"); out("notPctTxt", fnum.format(s.notairePct) + " %"); out("r_mob", eur(s.mob));
   out("loyerAn", eur(R.loyerAn)); out("vacPct", s.vac+" %"); out("vacPct2", s.vac+" %"); out("vacPerte", "− "+eur(R.loyerAn-R.loyerEff)); out("loyerEff", eur(R.loyerEff)); out("chargesAn", eur(R.chargesAn));
   // financement
   out("dureeTxt", ans(s.duree));
-  out("montantExpl", s.montantAuto ? "Total acquisition "+eur(R.totalAcq)+" − apport "+eur(s.apport)+" = "+eur(R.montant) : "Montant saisi manuellement (hors apport, frais compris si besoin).");
+  out("montantExpl", s.montantAuto ? "Total acquisition "+eur(R.totalAcq)+" (garantie de "+eur(R.garantie)+" comprise) − apport "+eur(s.apport)+" = "+eur(R.montant) : "Montant saisi manuellement (hors apport, frais compris si besoin).");
   const mi = $("#montant"); mi.disabled = !!s.montantAuto; if (s.montantAuto && document.activeElement!==mi) mi.value = fnum.format(Math.round(R.montant)).replace(/ /g," ");
   out("garantieEur", eur(R.garantie));
   out("mHA", eur2(R.L.m)); out("mTot", eur2(R.L.mt)); out("mIns", eur2(R.L.ins)+" d'assurance");
