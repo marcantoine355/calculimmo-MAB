@@ -137,6 +137,10 @@ nav.tabs button[aria-selected="true"]{color:var(--accent);border-top-color:var(-
 .rc-mix{margin-top:12px;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
 .rc-mix label{font-weight:600;font-size:13.5px;margin-top:4px}
 @media (max-width:620px){.rc-res{grid-template-columns:minmax(0,1fr)}.rcseg{flex-wrap:wrap}.rcseg button{flex:1 1 45%;border-bottom:1px solid var(--line)}}
+.en-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.en-tiles .metric .v{font-size:24px}
+.en-tiles .metric.hl{background:var(--accent-soft);border-color:var(--accent)}
+@media (max-width:620px){.en-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.en-tiles .metric{padding:10px}.en-tiles .metric .v{font-size:18px}}
 .title-row{display:flex;align-items:center;gap:14px}
 .title-row img{width:84px;height:58px;object-fit:cover;border-radius:10px;flex:0 0 auto}
 .row.sum{background:var(--accent-soft);border-radius:6px;padding-inline:8px;margin-top:4px;border-bottom:0}
@@ -478,6 +482,33 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       </div>
       <p class="formula" data-o="rt_first" style="margin-top:10px"></p>
     </section>
+    <section class="card" id="enCard">
+      <h2>Enrichissement réel (TRI)</h2>
+      <p class="formula" style="margin:-6px 0 12px">Même avec un cash flow à zéro, vous vous enrichissez : chaque mois, le locataire rembourse une partie de votre dette. Enrichissement réel = cash flow + capital remboursé<span data-o="en_pvTxt"></span>, rapporté au prix d'acquisition et à l'argent que vous avez vraiment mis : apport + ce que vous remettez au pot.</p>
+      <div class="fields">
+        <div class="f"><label>Cash flow pris en compte</label>
+          <div class="seg" role="group" aria-label="Avant ou après impôt"><button type="button" data-entax="apres">Après impôt</button><button type="button" data-entax="avant">Avant impôt</button></div>
+          <span class="hint" data-o="en_regTxt"></span></div>
+        <div class="f"><label class="check"><input type="checkbox" id="en_pv" data-k="en_pv"> Ajouter la revalorisation du bien</label>
+          <div class="inp"><input id="en_reval" data-k="en_reval" inputmode="decimal" aria-label="Revalorisation annuelle"><span class="u">% / an</span></div>
+          <span class="hint">Plus-value latente, non encaissée tant que vous ne vendez pas</span></div>
+      </div>
+      <div class="en-tiles">
+        <div class="metric"><div class="l">Capital remboursé</div><div class="v" data-o="en_cap">–</div><p class="formula" data-o="en_capS"></p></div>
+        <div class="metric"><div class="l">Cash flow</div><div class="v" data-o="en_cf">–</div><p class="formula" data-o="en_cfS"></p></div>
+        <div class="metric hl"><div class="l">Enrichissement réel</div><div class="v" data-o="en_enr">–</div><p class="formula" data-o="en_enrS"></p></div>
+        <div class="metric"><div class="l">Sur le prix d'acquisition</div><div class="v" data-o="en_rPrix">–</div><p class="formula" data-o="en_rPrixS"></p></div>
+        <div class="metric"><div class="l">Sur l'argent investi</div><div class="v" data-o="en_rInv">–</div><p class="formula" data-o="en_rInvS"></p></div>
+        <div class="metric hl"><div class="l">TRI</div><div class="v" data-o="en_tri">–</div><p class="formula" data-o="en_triS"></p></div>
+      </div>
+      <p class="best-line" data-o="en_sum" style="margin-top:14px"></p>
+      <details>
+        <summary>Évolution année par année</summary>
+        <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th>Année</th><th>Capital remboursé</th><th>Cash flow</th><th data-en-pv>Revalorisation</th><th>Enrichissement</th><th>Argent investi (cumul)</th><th>Sur prix</th><th>Sur argent investi</th></tr></thead><tbody id="enRows"></tbody></table></div>
+      </details>
+      <p class="formula" style="margin-top:8px">TRI (taux de rendement interne) : le taux annuel qui résume tout, de l'apport de départ à la revente, en passant par chaque cash flow (positif ou remis au pot). Il utilise l'année et le prix de revente de l'onglet Impact fiscal. Calcul annuel approché.</p>
+    </section>
+
     <section class="card" id="rcCalc">
       <h2>Calculateur de rendement cible</h2>
       <p class="formula" style="margin:-6px 0 12px">Fixez le rendement que vous visez : l'appli calcule le prix d'achat maximum, le loyer minimum, ou un mélange des deux. Tout est recalculé : notaire, crédit, charges et impôt du régime choisi.</p>
@@ -486,7 +517,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
       <div class="fields" style="margin-top:16px">
         <div class="f full"><label>Rendement visé</label>
           <div class="seg rcseg" role="group" aria-label="Type de rendement">
-            <button type="button" data-rck="brut">Brut</button><button type="button" data-rck="net">Net hors fiscalité</button><button type="button" data-rck="nn">Net après impôt</button><button type="button" data-rck="fp">Sur fonds propres</button>
+            <button type="button" data-rck="brut">Brut</button><button type="button" data-rck="net">Net hors fiscalité</button><button type="button" data-rck="nn">Net après impôt</button><button type="button" data-rck="fp">Enrichissement réel (TRI)</button>
           </div></div>
         <div class="f"><label for="rc_target">Je veux obtenir</label><div class="inp"><input id="rc_target" data-k="rc_target" inputmode="decimal"><span class="u">%</span></div><span class="hint" data-o="rc_nowHint"></span></div>
       </div>
@@ -504,7 +535,7 @@ footer{color:var(--muted);font-size:12px;padding-block:0 30px}
         </div>
         <p class="formula" data-o="rc_mS" style="margin-top:6px"></p>
       </div>
-      <p class="formula" style="margin-top:10px">Prix : les frais de notaire (au taux saisi) et la garantie suivent le prix ; les frais d'agence et les travaux restent ceux saisis. Loyer : montant mensuel charges comprises, avec la vacance locative choisie. Le rendement après impôt et sur fonds propres est calculé sur la 1re année de location.</p>
+      <p class="formula" style="margin-top:10px">Prix : les frais de notaire (au taux saisi) et la garantie suivent le prix ; les frais d'agence et les travaux restent ceux saisis. Loyer : montant mensuel charges comprises, avec la vacance locative choisie. Le rendement après impôt est calculé sur la 1re année de location ; le TRI sur toute la durée, jusqu'à la revente.</p>
     </section>
     <button type="button" class="go" data-goto="fiscal">Maintenant, voyons l'impact fiscal →</button>
   </div>
@@ -905,7 +936,7 @@ const DEF = {
   fx_loyerMeuble:0, fx_terrain:15, fx_distrib:0, fx_reno:false,
   fx_sciCrea:1500, fx_vente:0, fx_anVente:new Date().getFullYear()+11, fx_sciSortie:"retirer", fx_evo:0, fx_palAn:0, fx_palLoyer:0,
   fx_tx1an:0, fx_tx1m:0, fx_tx1lib:"", fx_tx2an:0, fx_tx2m:0, fx_tx2lib:"", fx_tx3an:0, fx_tx3m:0, fx_tx3lib:"",
-  rc_kind:"brut", rc_target:8, rc_mix:5,
+  rc_kind:"brut", rc_target:8, rc_mix:5, en_tax:"apres", en_pv:false, en_reval:1,
   fx_mois:1, fx_an0:new Date().getFullYear()+1, fx_amBati:30, fx_amTrav:15, fx_amMob:7
 };
 // Valeurs de secours : baromètre Meilleurtaux du 19/10/2026 (remplacées en direct quand l'appli tourne sur Netlify)
@@ -1089,7 +1120,7 @@ function fiscal(R, s){
       const impot = ir + ps + is + pfu;
       const reint = (cumDotNM + cumDotM) > 0 ? usedCum*cumDotNM/(cumDotNM + cumDotM) : 0;
       rows.push({ y, an:s.fx_an0 + y - 1, mo, loyerMois:(meuble && s.fx_loyerMeuble > 0 ? s.fx_loyerMeuble : s.loyer)*f, Rv, C, fin, travDed, travEx, ded, am, defUsed, base, imput, ir, ps, is, pfu, div, impot,
-        cfAvant, cfApres:cfAvant - impot, report, reint, amIScum, defIS, reserves:Math.max(0, reserves), travCum, crd:L.crd });
+        cap:Math.max(0, L.paid - L.it - L.ass), cfAvant, cfApres:cfAvant - impot, report, reint, amIScum, defIS, reserves:Math.max(0, reserves), travCum, crd:L.crd });
     }
     const R1 = rows[0];
     const eligible = id === "microF" ? R1.Rv*12/m1 <= FX.MICRO_F : id === "microBIC" ? R1.Rv*12/m1 <= FX.MICRO_BIC : true;
@@ -1168,6 +1199,45 @@ function revente(X, R, s){
   }
   const best = REG_ORDER.filter(k => out[k].eligible).reduce((b, k) => (!b || out[k].enrich > out[b].enrich) ? k : b, null);
   return { regs:out, best, v, apport, n, auto: !(s.fx_vente > 0) };
+}
+
+// ---- Enrichissement réel & TRI ----
+function irr(flows){
+  const npv = r => flows.reduce((a, f, t) => a + f/Math.pow(1 + r, t), 0);
+  if (!flows.some(f => f < 0)) return flows.some(f => f > 0) ? Infinity : NaN;
+  if (!flows.some(f => f > 0)) return -Infinity;
+  let lo = -0.99, hi = 10, flo = npv(lo), fhi = npv(hi);
+  if (flo*fhi > 0) return NaN;
+  for (let i = 0; i < 200; i++){ const m = (lo + hi)/2, fm = npv(m); if ((fm > 0) === (flo > 0)){ lo = m; flo = fm; } else hi = m; if (hi - lo < 1e-7) break; }
+  return (lo + hi)/2*100;
+}
+function enrichissement(X, R, s){
+  const r = X.regs[REGS[s.fx_reg] ? s.fx_reg : "lmnp"], V = revente(X, R, s), d = V.regs[r.id];
+  const apport = V.apport, apresImpot = s.en_tax !== "avant";
+  const val0 = s.prix + s.travaux, g = (s.en_reval || 0)/100;
+  const H = Math.min(FX.H, Math.max(s.pret ? s.duree + 1 : 1, V.n));
+  let injecte = 0, cumEnr = 0;
+  const rows = r.rows.slice(0, H).map((x, i) => {
+    const cf = apresImpot ? x.cfApres : x.cfAvant;
+    if (cf < 0) injecte += -cf;
+    const frac = x.mo/12;
+    const pv = s.en_pv ? val0*(Math.pow(1 + g, i + frac) - Math.pow(1 + g, i)) : 0;
+    const enr = cf + x.cap + pv; cumEnr += enr;
+    const investi = apport + injecte;
+    return { an:x.an, mo:x.mo, cap:x.cap, cf, pv, enr, investi, cumEnr,
+      rPrix: R.totalAcq > 0 ? enr/R.totalAcq*100*(12/x.mo) : NaN,
+      rInv: investi > 1 ? enr/investi*100*(12/x.mo) : Infinity };
+  });
+  // TRI : −apport au départ, cash flows (après ou avant impôt) chaque année, net de la vente l'année de revente
+  const flows = [-apport];
+  for (let k = 1; k <= V.n; k++){ const x = r.rows[k-1]; flows.push((apresImpot ? x.cfApres : x.cfAvant) + (k === V.n ? d.netVente : 0)); }
+  const tri = irr(flows);
+  const gains = flows.slice(1).reduce((a, f) => a + Math.max(0, f), 0), mises = flows.reduce((a, f) => a + Math.max(0, -f), 0);
+  const ref = rows.find(x => x.mo === 12) || rows[0];
+  const loanRows = rows.slice(0, s.pret ? Math.min(rows.length, s.duree + (X.m1 < 12 ? 1 : 0)) : rows.length);
+  const moy = loanRows.length ? loanRows.reduce((a, x) => a + x.enr, 0)/(loanRows.reduce((a, x) => a + x.mo, 0)/12) : 0;
+  return { rows, ref, tri, multiple: mises > 0 ? gains/mises : Infinity, n:V.n, anV:s.fx_an0 + V.n, netVente:d.netVente, apport, reg:r.id, moy, apresImpot,
+    capTot: loanRows.reduce((a, x) => a + x.cap, 0) };
 }
 
 function compute(){
@@ -1272,7 +1342,7 @@ function render(){
   $$("#vacSeg button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.vac===s.vac)));
   renderBaro();
   renderFiscal(R);
-  if (!$("#p-rentabilite").hidden) renderCalc(R);
+  if (!$("#p-rentabilite").hidden){ renderEnrich(R); renderCalc(R); }
   save();
 }
 
@@ -1604,8 +1674,33 @@ function closeSheet(){
   if (lastFocus && lastFocus.focus) lastFocus.focus();
 }
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+// ================= ENRICHISSEMENT RÉEL =================
+const pctX = v => v === Infinity ? "∞" : pct(v);
+function renderEnrich(R){
+  const s = S, X = fiscal(R, s), E = enrichissement(X, R, s), y = E.ref;
+  $$("[data-entax]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.entax === (E.apresImpot ? "apres" : "avant"))));
+  $("#en_reval").closest(".inp").hidden = !s.en_pv;
+  $$("[data-en-pv]").forEach(el => { el.hidden = !s.en_pv; });
+  out("en_pvTxt", s.en_pv ? " + revalorisation du bien" : "");
+  out("en_regTxt", E.apresImpot ? "Impôt du régime choisi : " + REGS[E.reg].nom : "Sans tenir compte de l'impôt");
+  const lab = y.an + (y.mo < 12 ? " (" + y.mo + " mois)" : "");
+  out("en_cap", eur(y.cap/12) + " / mois"); out("en_capS", eur(y.cap) + " en " + lab);
+  out("en_cf", signed(y.cf/12) + " / mois", tone(y.cf)); out("en_cfS", signed(y.cf) + " en " + lab + (E.apresImpot ? ", après impôt" : ", avant impôt"));
+  out("en_enr", signed(y.enr) + " / an", tone(y.enr)); out("en_enrS", "Cash flow + capital" + (s.en_pv ? " + revalorisation (" + eur(y.pv) + ")" : "") + " en " + lab);
+  out("en_rPrix", pct(y.rPrix), tone(y.rPrix)); out("en_rPrixS", eur(y.enr) + " ÷ " + eur(R.totalAcq) + " (total acquisition)");
+  out("en_rInv", pctX(y.rInv), tone(y.rInv)); out("en_rInvS", y.investi > 1 ? eur(y.enr) + " ÷ " + eur(y.investi) + " (apport" + (y.investi > E.apport + 1 ? " + remis au pot" : "") + ")" : "Aucun argent investi : rendement infini");
+  out("en_tri", E.tri === Infinity ? "∞" : (isFinite(E.tri) ? pct(E.tri) : "–"), tone(E.tri));
+  out("en_triS", "Sur " + E.n + " ans, revente en " + E.anV + (isFinite(E.multiple) ? " · ×" + E.multiple.toLocaleString("fr-FR", {maximumFractionDigits:2}) + " la mise" : ""));
+  out("en_sum", (s.pret ? "Sur la durée du prêt, le locataire rembourse " + eur(E.capTot) + " de capital à votre place. " : "")
+    + "Enrichissement moyen : " + signed(E.moy) + " par an, soit " + signed(E.moy/12) + " par mois. "
+    + (isFinite(E.tri) ? "Votre argent rapporte l'équivalent de " + pct(E.tri) + " par an jusqu'à la revente en " + E.anV + "." : E.tri === Infinity ? "Sans apport ni argent remis au pot, le TRI est infini : vous vous enrichissez sans rien sortir de votre poche." : ""));
+  $("#enRows").innerHTML = E.rows.map(x => "<tr><td>" + x.an + (x.mo < 12 ? " (" + x.mo + " mois)" : "") + "</td><td>" + eur(x.cap) + '</td><td class="' + tone(x.cf) + '">' + signed(x.cf) + "</td>"
+    + (s.en_pv ? "<td>" + eur(x.pv) + "</td>" : "") + '<td class="' + tone(x.enr) + '"><b>' + signed(x.enr) + "</b></td><td>" + eur(x.investi) + "</td><td>" + pct(x.rPrix) + "</td><td>" + pctX(x.rInv) + "</td></tr>").join("");
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-entax]"); if (b){ S.en_tax = b.dataset.entax; render(); } });
+
 // ================= CALCULATEUR DE RENDEMENT CIBLE =================
-const RC_LBL = { brut:"Rentabilité brute", net:"Rentabilité nette hors fiscalité", nn:"Rentabilité nette après impôt", fp:"Rentabilité nette sur fonds propres" };
+const RC_LBL = { brut:"Rentabilité brute", net:"Rentabilité nette hors fiscalité", nn:"Rentabilité nette après impôt", fp:"Enrichissement réel (TRI)" };
 function metricsFor(mod, kinds){
   const save = S; S = mod; let R;
   try { R = compute(); } finally { S = save; }
@@ -1615,7 +1710,7 @@ function metricsFor(mod, kinds){
   if (kinds.includes("nn") || kinds.includes("fp")){
     const X = fiscal(R, mod), r = X.regs[REGS[mod.fx_reg] ? mod.fx_reg : "lmnp"];
     o.nn = r.nn; o.cfAn = r.cfM1*12;
-    o.fp = o.apport > 1 ? o.cfAn/o.apport*100 : NaN;
+    o.fp = enrichissement(X, R, mod).tri;
   }
   return o;
 }
@@ -1644,12 +1739,12 @@ function renderCalc(R0){
     ["brut", "(loyer × 12) ÷ total acquisition"],
     ["net", "(loyers après vacance − charges) ÷ total acquisition"],
     ["nn", "(loyers − charges − impôt) ÷ total acquisition · " + regNom],
-    ["fp", "cash flow annuel après impôt ÷ apport (" + eur(cur.apport) + ")"]
+    ["fp", "TRI : apport (" + eur(cur.apport) + "), cash flows et revente · " + regNom]
   ];
   $("#rcNow").innerHTML = rows.map(([k, f]) => '<div class="row' + (k === kind ? " sum" : "") + '"><span>' + RC_LBL[k] + '<br><small class="formula">' + f + '</small></span><b class="' + tone(cur[k]) + '">'
-    + (k === "fp" && !(cur.apport > 1) ? "aucun apport" : pct(cur[k])) + "</b></div>").join("");
+    + (cur[k] === Infinity ? "∞ (sans apport)" : pct(cur[k])) + "</b></div>").join("");
   $$("[data-rck]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.rck === kind)));
-  out("rc_nowHint", "Actuellement : " + (kind === "fp" && !(cur.apport > 1) ? "pas d'apport, rendement infini" : pct(cur[kind])));
+  out("rc_nowHint", "Actuellement : " + (cur[kind] === Infinity ? "infini (aucun apport)" : pct(cur[kind])));
   const kinds = [kind];
   const mP = p => metricsFor(withPrice(p), kinds)[kind];
   const mL = (l, base) => metricsFor(withRent(l, base), kinds)[kind];
